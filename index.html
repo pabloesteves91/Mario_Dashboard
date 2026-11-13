@@ -50,7 +50,9 @@ main{max-width:980px;margin:auto;padding:1.4rem 1rem 3rem}
 @media(max-width:640px){nav{position:fixed;bottom:0;left:0;right:0;background:var(--ink);padding:.45rem .4rem calc(.45rem + env(safe-area-inset-bottom))}nav button{font-size:.78rem}main{padding-bottom:5.5rem}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.2rem;margin-bottom:1rem}
 .grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
-.grid .card{margin:0}
+.grid>*{min-width:0}.grid .card{margin:0}
+/* iOS: Datum/Zeit-Felder sprengen sonst die Kartenbreite */
+input[type=date],input[type=time]{-webkit-appearance:none;appearance:none;min-width:0;max-width:100%;min-height:2.9em}
 .big{font:800 3.4rem/1 system-ui;letter-spacing:-.03em}
 .balance{background:var(--ink);color:#fff;border:0;display:flex;justify-content:space-between;align-items:end;gap:1rem;flex-wrap:wrap}
 .balance .big{color:var(--amber)}
@@ -186,7 +188,7 @@ const PAGES = {
     termine: ['Termine', () => `<h1>Termine</h1>
       <form class="card" data-form="appt"><h2>Termin anfragen</h2><div class="grid">
         <label>Datum<input type="date" name="date" required min="${new Date().toISOString().slice(0, 10)}"></label>
-        <label>Zeit<input type="time" name="time" required step="900"></label></div>
+        <label>Zeit<input type="time" name="time" required></label></div>
         <label>Bemerkung (optional)<input name="note" maxlength="120" placeholder="z.B. Treffpunkt Bahnhof"></label>
         <button class="btn">Anfrage senden</button></form>
       <div class="card"><h2>Meine Termine</h2>${apptList(db.appts.filter(a => a.email === me).sort(byDate))}</div>`],
