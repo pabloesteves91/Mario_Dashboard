@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fahrschule Mario</title>
+<style>
+:root{--ink:#14213d;--blue:#0b4f9e;--amber:#fca311;--bg:#f3f4f7;--card:#fff;--line:#e2e5ec;--mute:#5d6678;--ok:#12805c;--bad:#b3261e;--r:14px}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+h1,h2,h3{line-height:1.2;margin:0 0 .5em;letter-spacing:-.01em}
+h1{font-size:1.7rem}h2{font-size:1.2rem}h3{font-size:1rem}
+p{margin:0 0 .8em}
+a{color:var(--blue)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.btn{border:0;border-radius:10px;padding:.65em 1.1em;background:var(--blue);color:#fff;font-weight:600;cursor:pointer}
+.btn:hover{filter:brightness(1.12)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.warn{background:var(--bad)}.btn.ok{background:var(--ok)}
+.btn.small{padding:.4em .8em;font-size:.9rem}
+label{display:block;font-size:.85rem;font-weight:600;margin-bottom:.9em}
+input,textarea,select{display:block;width:100%;margin-top:.3em;padding:.65em .8em;border:1px solid #c5cad6;border-radius:10px;background:#fff}
+.logo{width:56px;height:56px;border-radius:12px;background:var(--blue);color:#fff;display:grid;place-items:center;font:800 2rem/1 system-ui;border:2px dashed #fff;outline:2px solid var(--blue);flex:none}
+.logo.sm{width:36px;height:36px;font-size:1.2rem;border-radius:8px}
+
+/* Login */
+.login{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr}
+.hero{background:var(--ink);color:#fff;padding:3rem;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:18%;top:-10%;width:10px;height:120%;transform:rotate(14deg);
+  background:repeating-linear-gradient(var(--amber) 0 46px,transparent 46px 86px)}
+.hero h1{font-size:clamp(2rem,4vw,3.2rem);max-width:11ch;position:relative;z-index:1}
+.hero p{color:#b9c2d6;max-width:30ch;position:relative;z-index:1}
+.loginbox{display:grid;place-items:center;padding:2rem}
+.loginbox form{width:min(100%,360px)}
+.loginbox .brand{display:flex;gap:.9rem;align-items:center;margin-bottom:2rem}
+.loginbox .btn{width:100%;padding:.8em}
+.hint{font-size:.8rem;color:var(--mute);margin-top:1.2rem}
+@media(max-width:760px){.login{grid-template-columns:1fr}.hero{padding:2rem 1.5rem;min-height:210px}.hero::after{right:12%}}
+
+/* App */
+header{background:var(--ink);color:#fff;position:sticky;top:0;z-index:5}
+.bar{max-width:980px;margin:auto;display:flex;align-items:center;gap:.8rem;padding:.6rem 1rem}
+.bar .who{margin-left:auto;font-size:.85rem;color:#b9c2d6;text-align:right}
+.bar .btn{color:#fff;border-color:#3b4763}
+nav{display:flex;gap:.25rem;max-width:980px;margin:auto;padding:0 .6rem .5rem}
+nav button{flex:1;border:0;background:none;color:#b9c2d6;padding:.5em .3em;border-radius:9px;cursor:pointer;font-weight:600;font-size:.92rem}
+nav button[aria-current]{background:var(--amber);color:var(--ink)}
+main{max-width:980px;margin:auto;padding:1.4rem 1rem 3rem}
+@media(max-width:640px){nav{position:fixed;bottom:0;left:0;right:0;background:var(--ink);padding:.45rem .4rem calc(.45rem + env(safe-area-inset-bottom))}nav button{font-size:.78rem}main{padding-bottom:5.5rem}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.2rem;margin-bottom:1rem}
+.grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.grid .card{margin:0}
+.big{font:800 3.4rem/1 system-ui;letter-spacing:-.03em}
+.balance{background:var(--ink);color:#fff;border:0;display:flex;justify-content:space-between;align-items:end;gap:1rem;flex-wrap:wrap}
+.balance .big{color:var(--amber)}
+.balance small{color:#b9c2d6}
+.mute{color:var(--mute);font-size:.9rem}
+.price{font-size:1.5rem;font-weight:800}
+.row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.list{list-style:none;margin:0;padding:0}
+.list li{display:flex;gap:.8rem;justify-content:space-between;align-items:center;flex-wrap:wrap;padding:.7rem 0;border-top:1px solid var(--line)}
+.list li:first-child{border-top:0}
+.tag{font-size:.75rem;font-weight:700;padding:.2em .65em;border-radius:99px;background:#fff3d6;color:#7a4d00;white-space:nowrap}
+.tag.ok{background:#dcf5ea;color:var(--ok)}.tag.bad{background:#fde4e2;color:var(--bad)}
+.msg{padding:.7rem 1rem;border-radius:10px;background:#dcf5ea;color:#0b5c41;margin-bottom:1rem;font-weight:600}
+.msg.err{background:#fde4e2;color:var(--bad)}
+fieldset{border:1px solid var(--line);border-radius:10px;margin:0 0 1rem;padding:.8rem 1rem}
+legend{font-weight:700;padding:0 .4em}
+fieldset label{font-weight:400;font-size:1rem;margin:.35em 0;display:flex;gap:.6em;align-items:center}
+fieldset input{width:auto;margin:0}
+.right{color:var(--ok);font-weight:700}.wrong{color:var(--bad);text-decoration:line-through}
+ol.steps{padding-left:1.2em;margin:0}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// shortcut: Logins und alle Daten liegen im Browser (localStorage) – keine echte Sicherheit, keine Synchronisation zwischen Geräten. Für den Echtbetrieb durch Backend (z.B. Firebase Auth + Firestore) ersetzen.
+const ACCOUNTS = {
+  'test@mario.ch':  {pw: 'testmario', role: 'admin',   name: 'Mario (Admin)'},
+  'test2@mario.ch': {pw: 'testmario', role: 'student', name: 'Test Schüler'},
+};
+const ABOS = [ // Platzhalter-Preise
+  {id: 1,  name: 'Einzellektion', price: 95},
+  {id: 5,  name: '5er-Abo',       price: 450},
+  {id: 10, name: '10er-Abo',      price: 850},
+  {id: 20, name: '20er-Abo',      price: 1600},
+];
+const TOPICS = [
+  {id: 'vortritt', title: 'Vortritt', text: [
+    'Ohne Signale gilt Rechtsvortritt: Wer von rechts kommt, darf zuerst fahren.',
+    'Im Kreisverkehr haben die Fahrzeuge im Kreisel (von links kommend) Vortritt.',
+    'Fussgängern am Fussgängerstreifen ist der Vortritt zu gewähren – nötigenfalls anhalten.',
+    'Rangfolge: Zeichen der Polizei › Lichtsignale › Signale und Markierungen › allgemeine Regeln.'],
+   quiz: [
+    {q: 'Kreuzung ohne Signale – wer hat Vortritt?', a: ['Das Fahrzeug von rechts', 'Das Fahrzeug von links', 'Das schnellere Fahrzeug'], c: 0},
+    {q: 'Du näherst dich einem Kreisverkehr. Wer hat Vortritt?', a: ['Du, weil du von rechts kommst', 'Die Fahrzeuge im Kreisel', 'Niemand, Handzeichen entscheiden'], c: 1},
+    {q: 'Eine Fussgängerin will den Streifen überqueren.', a: ['Hupen und weiterfahren', 'Beschleunigen', 'Vortritt gewähren, nötigenfalls anhalten'], c: 2},
+    {q: 'Die Ampel zeigt Grün, ein Polizist gibt das Zeichen «Halt».', a: ['Es gilt das Zeichen des Polizisten', 'Es gilt die Ampel', 'Es gilt Rechtsvortritt'], c: 0}]},
+  {id: 'signale', title: 'Signale', text: [
+    'Dreieck mit rotem Rand: Gefahrensignal – Tempo anpassen, bremsbereit sein.',
+    'Runde Signale mit rotem Rand sind Verbote, runde blaue Signale sind Gebote.',
+    'Achteckiges rotes «Stop»: vollständig anhalten, auch wenn die Strasse frei ist.',
+    'Gelbes, weiss umrandetes Quadrat auf der Spitze: Hauptstrasse – du hast Vortritt.'],
+   quiz: [
+    {q: 'Was bedeutet ein dreieckiges Signal mit rotem Rand?', a: ['Verbot', 'Gefahr', 'Hinweis'], c: 1},
+    {q: 'Was bedeutet ein rundes blaues Signal?', a: ['Gebot (Vorschrift)', 'Verbot', 'Gefahr'], c: 0},
+    {q: 'Wie verhältst du dich beim Signal «Stop»?', a: ['Langsam rollen genügt', 'Nur anhalten, wenn jemand kommt', 'Immer vollständig anhalten'], c: 2},
+    {q: 'Gelbes Quadrat auf der Spitze, weiss umrandet?', a: ['Ende der Hauptstrasse', 'Hauptstrasse', 'Kein Vortritt'], c: 1}]},
+  {id: 'tempo', title: 'Tempo & Abstand', text: [
+    'Allgemeine Höchstgeschwindigkeiten: innerorts 50, ausserorts 80, Autostrasse 100, Autobahn 120 km/h.',
+    'Mindestabstand: 2 Sekunden («einundzwanzig, zweiundzwanzig») bzw. halber Tacho in Metern.',
+    'Faustformeln: Reaktionsweg = (km/h ÷ 10) × 3, Bremsweg = (km/h ÷ 10)². Bei 50 km/h: 15 m + 25 m = 40 m Anhalteweg.',
+    'Die Geschwindigkeit ist immer den Strassen-, Verkehrs- und Sichtverhältnissen anzupassen.'],
+   quiz: [
+    {q: 'Allgemeine Höchstgeschwindigkeit innerorts?', a: ['30 km/h', '50 km/h', '60 km/h'], c: 1},
+    {q: 'Allgemeine Höchstgeschwindigkeit auf der Autobahn?', a: ['100 km/h', '130 km/h', '120 km/h'], c: 2},
+    {q: 'Welcher Mindestabstand gilt als Faustregel?', a: ['2 Sekunden', '1 Wagenlänge', '5 Meter'], c: 0},
+    {q: 'Anhalteweg bei 50 km/h nach Faustformel (trocken)?', a: ['ca. 15 m', 'ca. 40 m', 'ca. 80 m'], c: 1}]},
+  {id: 'fit', title: 'Fahrfähigkeit', text: [
+    'Auf Lernfahrten und während der Probezeit gilt Alkoholverbot (Grenzwert 0,1 ‰).',
+    'Für alle übrigen Lenkenden liegt der Grenzwert bei 0,5 ‰.',
+    'Bei Müdigkeit hilft nur eine Pause mit Kurzschlaf – offenes Fenster oder laute Musik nicht.',
+    'Das Handy in der Hand ist während der Fahrt verboten.'],
+   quiz: [
+    {q: 'Was gilt auf Lernfahrten bezüglich Alkohol?', a: ['Bis 0,5 ‰ erlaubt', 'Alkoholverbot', 'Ein Glas ist erlaubt'], c: 1},
+    {q: 'Allgemeiner Alkoholgrenzwert für Lenkende?', a: ['0,5 ‰', '0,8 ‰', '1,0 ‰'], c: 0},
+    {q: 'Du wirst am Steuer müde. Was hilft?', a: ['Fenster öffnen', 'Musik lauter stellen', 'Anhalten und Pause machen'], c: 2},
+    {q: 'Darfst du beim Fahren das Handy in der Hand bedienen?', a: ['Ja, kurz', 'Nein', 'Nur innerorts'], c: 1}]},
+];
+const KONTAKT = {name: 'Fahrschule Mario', street: 'Musterstrasse 1', city: '8000 Zürich', tel: '+41 79 000 00 00', mail: 'info@mario.ch'}; // Platzhalter
+
+const KEY = 'fahrschule-mario-v1';
+const db = Object.assign({credits: {}, tx: [], appts: [], quiz: {}}, JSON.parse(localStorage.getItem(KEY) || '{}'));
+const save = () => localStorage.setItem(KEY, JSON.stringify(db));
+let me = sessionStorage.getItem('me');
+if (!ACCOUNTS[me]) me = null;
+let ui = {page: 'home'};
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+const fmt = iso => new Date(iso).toLocaleString('de-CH', {weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'});
+const students = () => Object.keys(ACCOUNTS).filter(e => ACCOUNTS[e].role === 'student');
+const credits = e => db.credits[e] || 0;
+// Guthaben-Änderung: nur ganze Lektionen, nie unter 0. Gibt neuen Stand oder null (ungültig) zurück.
+function change(balance, delta) {
+  return Number.isInteger(delta) && delta !== 0 && balance + delta >= 0 ? balance + delta : null;
+}
+function book(email, delta, text) {
+  const n = change(credits(email), delta);
+  if (n === null) return false;
+  db.credits[email] = n;
+  db.tx.push({email, delta, text, at: new Date().toISOString()});
+  save();
+  return true;
+}
+console.assert(change(10, -3) === 7 && change(2, -3) === null && change(5, -1.5) === null && change(0, 10) === 10 && change(5, 0) === null, 'change() defekt');
+
+const STATUS = {pending: ['Offen', ''], confirmed: ['Bestätigt', 'ok'], rejected: ['Abgelehnt', 'bad']};
+const tag = s => `<span class="tag ${STATUS[s][1]}">${STATUS[s][0]}</span>`;
+const apptList = (list, admin) => list.length ? `<ul class="list">${list.map(a => `<li>
+  <div><strong>${fmt(a.when)}</strong>${admin ? ` · ${esc(ACCOUNTS[a.email].name)}` : ''}${a.note ? `<div class="mute">${esc(a.note)}</div>` : ''}</div>
+  <div class="row">${tag(a.status)}${admin && a.status === 'pending' ? `<button class="btn ok small" data-act="appt" data-id="${a.id}" data-s="confirmed">Bestätigen</button><button class="btn warn small" data-act="appt" data-id="${a.id}" data-s="rejected">Ablehnen</button>` : ''}</div></li>`).join('')}</ul>` : '<p class="mute">Keine Termine.</p>';
+const txList = email => { const l = db.tx.filter(t => t.email === email).slice(-6).reverse();
+  return l.length ? `<ul class="list">${l.map(t => `<li><span>${esc(t.text)}<div class="mute">${fmt(t.at)}</div></span><strong>${t.delta > 0 ? '+' : ''}${t.delta}</strong></li>`).join('')}</ul>` : '<p class="mute">Noch keine Buchungen.</p>'; };
+const byDate = (a, b) => a.when.localeCompare(b.when);
+
+const info = () => `<h1>Infos & Kontakt</h1>
+  <div class="card"><h2>Über uns</h2><p>Die ${KONTAKT.name} begleitet dich ruhig, geduldig und mit modernen Fahrzeugen bis zur bestandenen Prüfung. <span class="mute">(Platzhaltertext)</span></p>
+  <p><strong>Angebot:</strong> Fahrlektionen Kat. B (geschaltet & Automat), Verkehrskundeunterricht (VKU), Prüfungsvorbereitung.</p>
+  <p><strong>Lektion:</strong> 50 Minuten · Absagen bitte mindestens 24 Stunden vorher.</p></div>
+  <div class="card"><h2>Dein Weg zum Führerausweis</h2><ol class="steps"><li>Nothelferkurs</li><li>Sehtest</li><li>Gesuch um Lernfahrausweis einreichen</li><li>Theorieprüfung</li><li>Lernfahrausweis erhalten</li><li>Verkehrskundeunterricht (VKU)</li><li>Fahrlektionen</li><li>Praktische Prüfung</li></ol></div>
+  <div class="card"><h2>Kontakt</h2><address style="font-style:normal"><strong>${KONTAKT.name}</strong><br>${KONTAKT.street}<br>${KONTAKT.city}<br>
+  Tel. <a href="tel:${KONTAKT.tel.replace(/\s/g, '')}">${KONTAKT.tel}</a><br><a href="mailto:${KONTAKT.mail}">${KONTAKT.mail}</a></address>
+  <p class="mute" style="margin-top:.8em">Mo–Fr 08:00–19:00 · Sa 08:00–14:00</p></div>`;
+
+const PAGES = {
+  student: {
+    home: ['Start', () => { const next = db.appts.filter(a => a.email === me && a.status !== 'rejected' && a.when > new Date().toISOString().slice(0, 16)).sort(byDate).slice(0, 3);
+      return `<h1>Hallo ${esc(ACCOUNTS[me].name)}</h1>
+      <div class="card balance"><div><small>Dein Guthaben</small><div class="big">${credits(me)}</div><small>Lektion${credits(me) === 1 ? '' : 'en'} verfügbar</small></div><button class="btn" data-go="abos">Abo kaufen</button></div>
+      <div class="card"><h2>Nächste Termine</h2>${apptList(next)}<button class="btn ghost small" data-go="termine">Termin anfragen</button></div>
+      <div class="card"><h2>Letzte Buchungen</h2>${txList(me)}</div>`; }],
+    abos: ['Abos', () => `<h1>Abos</h1><p class="mute">Aktuelles Guthaben: <strong>${credits(me)}</strong> Lektionen. Testmodus – es wird nichts belastet.</p>
+      <div class="grid">${ABOS.map(a => `<div class="card"><h2>${a.name}</h2><p class="mute">${a.id} Lektion${a.id > 1 ? 'en' : ''} à 50 Min.</p><p class="price">CHF ${a.price}</p><button class="btn" data-act="buy" data-id="${a.id}">Kaufen</button></div>`).join('')}</div>`],
+    termine: ['Termine', () => `<h1>Termine</h1>
+      <form class="card" data-form="appt"><h2>Termin anfragen</h2><div class="grid">
+        <label>Datum<input type="date" name="date" required min="${new Date().toISOString().slice(0, 10)}"></label>
+        <label>Zeit<input type="time" name="time" required step="900"></label></div>
+        <label>Bemerkung (optional)<input name="note" maxlength="120" placeholder="z.B. Treffpunkt Bahnhof"></label>
+        <button class="btn">Anfrage senden</button></form>
+      <div class="card"><h2>Meine Termine</h2>${apptList(db.appts.filter(a => a.email === me).sort(byDate))}</div>`],
+    lernen: ['Lernen', () => { const t = TOPICS.find(t => t.id === ui.topic), best = (db.quiz[me] || {});
+      if (!t) return `<h1>Lernen</h1><div class="grid">${TOPICS.map(t => `<div class="card"><h2>${t.title}</h2><p class="mute">${t.quiz.length} Testfragen${best[t.id] != null ? ` · Bestes Resultat ${best[t.id]}/${t.quiz.length}` : ''}</p><button class="btn" data-act="topic" data-id="${t.id}">Öffnen</button></div>`).join('')}</div>`;
+      const r = ui.answers;
+      return `<button class="btn ghost small" data-act="topic" data-id="">← Alle Themen</button><h1 style="margin-top:.6em">${t.title}</h1>
+      <div class="card"><h2>Das musst du wissen</h2><ul>${t.text.map(x => `<li>${x}</li>`).join('')}</ul></div>
+      <form class="card" data-form="quiz"><h2>Kurztest</h2>${r ? `<div class="msg" role="status">Resultat: ${r.filter((x, i) => x === t.quiz[i].c).length} von ${t.quiz.length} richtig</div>` : ''}
+      ${t.quiz.map((q, i) => `<fieldset><legend>${i + 1}. ${q.q}</legend>${q.a.map((a, j) => `<label class="${r ? (j === q.c ? 'right' : r[i] === j ? 'wrong' : '') : ''}"><input type="radio" name="q${i}" value="${j}" required ${r ? `disabled ${r[i] === j ? 'checked' : ''}` : ''}>${a}</label>`).join('')}</fieldset>`).join('')}
+      ${r ? '<button class="btn" type="button" data-act="retry">Nochmals</button>' : '<button class="btn">Auswerten</button>'}</form>`; }],
+    info: ['Infos', info],
+  },
+  admin: {
+    home: ['Schüler', () => `<h1>Schüler & Guthaben</h1>${students().map(e => `<div class="card">
+      <div class="row" style="justify-content:space-between"><div><h2>${esc(ACCOUNTS[e].name)}</h2><span class="mute">${e}</span></div><div style="text-align:right"><div class="big">${credits(e)}</div><span class="mute">Lektionen</span></div></div>
+      <form class="row" data-form="deduct" data-email="${e}" style="margin:1rem 0"><label style="margin:0">Anzahl Lektionen<input type="number" name="n" min="1" max="${credits(e)}" value="1" required style="width:8em"></label>
+      <button class="btn" style="align-self:end" ${credits(e) ? '' : 'disabled'}>Abziehen</button></form>
+      <h3>Verlauf</h3>${txList(e)}</div>`).join('')}`],
+    termine: ['Termine', () => { const open = db.appts.filter(a => a.status === 'pending').sort(byDate), rest = db.appts.filter(a => a.status !== 'pending').sort(byDate);
+      return `<h1>Termine</h1><div class="card"><h2>Offene Anfragen (${open.length})</h2>${apptList(open, true)}</div><div class="card"><h2>Bearbeitet</h2>${apptList(rest, true)}</div>`; }],
+    info: ['Infos', info],
+  },
+};
+
+function render() {
+  const app = document.getElementById('app');
+  if (!me) { app.innerHTML = `<div class="login">
+    <section class="hero"><div class="logo" aria-hidden="true">L</div><div><h1>Sicher ans Ziel.</h1><p>Abos, Termine und Theorie – alles an einem Ort.</p></div></section>
+    <section class="loginbox"><form data-form="login">
+      <div class="brand"><div class="logo" role="img" aria-label="Logo Platzhalter">L</div><div><h2 style="margin:0">Fahrschule Mario</h2><span class="mute">Schülerportal</span></div></div>
+      ${ui.err ? `<div class="msg err" role="alert">${ui.err}</div>` : ''}
+      <label>E-Mail<input type="email" name="email" required autocomplete="username" autofocus></label>
+      <label>Passwort<input type="password" name="pw" required autocomplete="current-password"></label>
+      <button class="btn">Anmelden</button>
+      <p class="hint">Testversion: Daten werden nur in diesem Browser gespeichert.</p></form></section></div>`; ui.err = ''; return; }
+  const pages = PAGES[ACCOUNTS[me].role], page = pages[ui.page] ? ui.page : 'home';
+  app.innerHTML = `<header><div class="bar"><div class="logo sm" aria-hidden="true">L</div><strong>Fahrschule Mario</strong>
+    <span class="who">${esc(ACCOUNTS[me].name)}</span><button class="btn ghost small" data-act="logout">Abmelden</button></div>
+    <nav aria-label="Hauptnavigation">${Object.keys(pages).map(p => `<button data-go="${p}" ${p === page ? 'aria-current="page"' : ''}>${pages[p][0]}</button>`).join('')}</nav></header>
+    <main>${ui.msg ? `<div class="msg" role="status">${esc(ui.msg)}</div>` : ''}${ui.err ? `<div class="msg err" role="alert">${esc(ui.err)}</div>` : ''}${pages[page][1]()}</main>`;
+  ui.msg = ui.err = '';
+}
+
+document.addEventListener('click', ev => {
+  const b = ev.target.closest('[data-go],[data-act]'); if (!b) return;
+  const {go, act, id} = b.dataset;
+  if (go) { ui = {page: go}; window.scrollTo(0, 0); }
+  else if (act === 'logout') { me = null; sessionStorage.removeItem('me'); ui = {page: 'home'}; }
+  else if (act === 'buy') { const a = ABOS.find(a => a.id === +id);
+    if (!confirm(`${a.name} für CHF ${a.price} kaufen? (Testkauf – keine echte Zahlung)`)) return;
+    book(me, a.id, `Kauf ${a.name}`); ui.msg = `${a.name} gekauft – ${a.id} Lektion${a.id > 1 ? 'en' : ''} gutgeschrieben.`; }
+  else if (act === 'appt' && ACCOUNTS[me].role === 'admin') { const a = db.appts.find(a => a.id === +id); if (a) { a.status = b.dataset.s; save(); } }
+  else if (act === 'topic') { ui.topic = id; ui.answers = null; window.scrollTo(0, 0); }
+  else if (act === 'retry') ui.answers = null;
+  render();
+});
+
+document.addEventListener('submit', ev => {
+  ev.preventDefault();
+  const f = ev.target, d = Object.fromEntries(new FormData(f)), kind = f.dataset.form;
+  if (kind === 'login') { const email = d.email.trim().toLowerCase();
+    if (ACCOUNTS[email] && ACCOUNTS[email].pw === d.pw) { me = email; sessionStorage.setItem('me', me); ui = {page: 'home'}; }
+    else ui.err = 'E-Mail oder Passwort ist falsch.'; }
+  else if (kind === 'appt') { const when = `${d.date}T${d.time}`;
+    if (isNaN(new Date(when)) || new Date(when) <= new Date()) ui.err = 'Bitte einen Zeitpunkt in der Zukunft wählen.';
+    else { db.appts.push({id: Date.now(), email: me, when, note: d.note.trim().slice(0, 120), status: 'pending'}); save(); ui.msg = 'Anfrage gesendet – du siehst hier, sobald sie bestätigt ist.'; } }
+  else if (kind === 'deduct' && ACCOUNTS[me].role === 'admin') { const n = Number(d.n);
+    if (book(f.dataset.email, -n, `${n} Lektion${n > 1 ? 'en' : ''} abgezogen`)) ui.msg = `${n} Lektion${n > 1 ? 'en' : ''} abgezogen.`;
+    else ui.err = 'Ungültige Anzahl – höchstens das vorhandene Guthaben.'; }
+  else if (kind === 'quiz') { const t = TOPICS.find(t => t.id === ui.topic);
+    ui.answers = t.quiz.map((_, i) => +d['q' + i]);
+    const score = ui.answers.filter((x, i) => x === t.quiz[i].c).length;
+    (db.quiz[me] ||= {})[t.id] = Math.max(score, db.quiz[me][t.id] || 0); save(); }
+  render();
+});
+render();
+</script>
+</body>
+</html>
